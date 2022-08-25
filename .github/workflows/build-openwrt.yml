@@ -97,7 +97,6 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-        sed -i 's/influxdb/influxdb_v2/g' feeds/packages/utils/telegraf/variant-small/plugins/outputs/all/all.go
 
     - name: Compile the firmware
       id: compile
