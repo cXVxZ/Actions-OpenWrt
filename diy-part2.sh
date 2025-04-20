@@ -26,7 +26,7 @@ sed -i \
   .config
 
 cat << EOF >> .config
-CONFIG_ALL_KMODS=y
+#CONFIG_ALL_KMODS=y
 #Custom
 CONFIG_PACKAGE_luci-app-ddns=y
 CONFIG_PACKAGE_luci-app-frps=y
