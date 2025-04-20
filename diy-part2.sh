@@ -18,3 +18,21 @@
 
 # Modify hostname
 #sed -i 's/OpenWrt/P3TERX-Router/g' package/base-files/files/bin/config_generate
+
+sed -i \
+  -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_NONE_V2RAY=y/s/^/#/' \
+  -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks_NONE_Client=y/s/^/#/' \
+  -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks_NONE_Server=y/s/^/#/' \
+  openwrt/.config
+
+cat << EOF >> openwrt/.config
+CONFIG_ALL_KMODS=y
+#Custom
+CONFIG_PACKAGE_luci-app-ddns=y
+CONFIG_PACKAGE_luci-app-frps=y
+CONFIG_PACKAGE_luci-app-wireguard=y
+CONFIG_PACKAGE_luci-app-wol=y
+CONFIG_PACKAGE_tailscale=y
+CONFIG_PACKAGE_cloudflared=y
+CONFIG_PACKAGE_snmpd=y
+EOF
