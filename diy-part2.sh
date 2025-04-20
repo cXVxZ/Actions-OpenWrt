@@ -23,9 +23,9 @@ sed -i \
   -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_NONE_V2RAY=y/s/^/#/' \
   -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks_NONE_Client=y/s/^/#/' \
   -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks_NONE_Server=y/s/^/#/' \
-  openwrt/.config
+  .config
 
-cat << EOF >> openwrt/.config
+cat << EOF >> .config
 CONFIG_ALL_KMODS=y
 #Custom
 CONFIG_PACKAGE_luci-app-ddns=y
