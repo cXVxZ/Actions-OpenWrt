@@ -19,6 +19,9 @@
 # Modify hostname
 #sed -i 's/OpenWrt/P3TERX-Router/g' package/base-files/files/bin/config_generate
 
+# Fix SUBTARGET
+sed -i 's/mediatek_mt7981/mediatek_filogic/g' filename
+
 sed -i \
   -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_NONE_V2RAY=y/s/^/#/' \
   -e '/^CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks_NONE_Client=y/s/^/#/' \
