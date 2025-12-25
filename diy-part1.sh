@@ -17,7 +17,7 @@
 #echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
 #echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
 
-cat << EOF >>package/kernel/mt76/patches/001-wifi-cfg80211-mac80211-Add-support-to-get-radio-inde.patch
+cat << EOF >>package/kernel/mt76/patches/001-wifi-mt76-wake-queues-after-reconfig.patch
 --- a/mt76x02_mmio.c
 +++ b/mt76x02_mmio.c
 @@ -534,6 +534,7 @@ void mt76x02_reconfig_complete(struct ieee80211_hw *hw,
