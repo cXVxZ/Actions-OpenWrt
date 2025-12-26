@@ -21,11 +21,11 @@ cat << EOF >>package/kernel/mt76/patches/001-wifi-mt76-wake-queues-after-reconfi
 --- a/mt76x02_mmio.c
 +++ b/mt76x02_mmio.c
 @@ -534,6 +534,7 @@ void mt76x02_reconfig_complete(struct ieee80211_hw *hw,
-		return;
-
-	clear_bit(MT76_RESTART, &dev->mphy.state);
+ 		return;
+ 
+ 	clear_bit(MT76_RESTART, &dev->mphy.state);
 +	ieee80211_wake_queues(hw);
-}
-EXPORT_SYMBOL_GPL(mt76x02_reconfig_complete);
-
+ }
+ EXPORT_SYMBOL_GPL(mt76x02_reconfig_complete);
+ 
 EOF
