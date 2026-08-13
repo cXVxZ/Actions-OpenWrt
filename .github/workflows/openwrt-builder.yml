@@ -26,6 +26,7 @@ env:
   UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
+  SSH: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -77,7 +78,11 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
+        
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      if: env.SSH == 'true'
+      
     - name: Download package
       id: package
       run: |
