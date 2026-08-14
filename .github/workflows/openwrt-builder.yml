@@ -18,11 +18,8 @@ on:
     inputs:
       SSH:
         required: true
-        type: choice
-        options:
-          - true
-          - false
-        default: 'false'
+        type: boolean
+        default: false
 
 env:
   REPO_URL: https://github.com/chasey-dev/immortalwrt-mt798x-rebase
@@ -88,7 +85,7 @@ jobs:
         
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
-      if: inputs.SSH == 'true'
+      if: inputs.SSH == true
       
     - name: Download package
       id: package
@@ -135,12 +132,22 @@ jobs:
         name: OpenWrt_firmware${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
+    - name: Generate release tag
+      id: release_tag
+      run: |
+        BRANCH="${GITHUB_REF_NAME//\//-}"
+        TIMESTAMP=$(date -u +"%Y%m%d-%H%M")
+        TAG="${BRANCH}-${TIMESTAMP}"
 
+        echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+        echo "Release tag: ${TAG}"
+        
     - name: Upload firmware to release
       uses: softprops/action-gh-release@master
       if: (!cancelled())
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        tag_name: ${{ steps.release_tag.outputs.tag }}
         files: ${{ env.FIRMWARE }}/*
 
