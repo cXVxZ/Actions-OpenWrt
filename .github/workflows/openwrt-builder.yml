@@ -82,7 +82,17 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-        
+
+    - name: Cache downloads and ccache
+      uses: actions/cache@v4
+      with:
+        path: |
+          openwrt/dl
+          openwrt/.ccache
+        key: openwrt-${{ inputs.repo }}-${{ inputs.branch }}-${{ inputs.cache_scope }}-${{ hashFiles('feeds/**', 'packages/**', 'scripts/**', 'configs/**', 'manifests/**') }}
+        restore-keys: |
+          openwrt-${{ inputs.repo }}-${{ inputs.branch }}-${{ inputs.cache_scope }}-
+            
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
       if: inputs.SSH == true
@@ -91,8 +101,8 @@ jobs:
       id: package
       run: |
         cd openwrt
-        # make defconfig
-        make olddefconfig
+        make defconfig
+        # make olddefconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
@@ -112,7 +122,7 @@ jobs:
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
-      if: env.UPLOAD_BIN_DIR == 'true'
+      if: env.UPLOAD_BIN_DIR == 'true' && !cancelled()
       with:
         name: OpenWrt_bin${{ env.FILE_DATE }}
         path: openwrt/bin
