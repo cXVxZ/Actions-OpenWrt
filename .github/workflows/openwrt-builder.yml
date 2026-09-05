@@ -61,7 +61,35 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+  
+    # ============================================================
+    # Cache OpenWrt download directory + ccache
+    # ============================================================
+    - name: Restore OpenWrt cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          /workdir/openwrt/dl
+          /workdir/openwrt/.ccache
+        key: openwrt-${{ runner.os }}-
+        # ${{ hashFiles('.config', 'feeds.conf.default') }}
+        restore-keys: |
+          openwrt-${{ runner.os }}-
 
+    - name: Setup ccache
+      run: |
+        mkdir -p /workdir/openwrt/.ccache
+        
+        ccache --set-config=cache_dir=/workdir/openwrt/.ccache
+        ccache --set-config=max_size=5G
+        ccache --set-config=compression=true
+        
+        echo "CCACHE_DIR=/workdir/openwrt/.ccache" >> $GITHUB_ENV
+        
+        echo "===== ccache config ====="
+        ccache --show-config
+        echo "========================="
+    
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
@@ -106,6 +134,13 @@ jobs:
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "status=success" >> $GITHUB_OUTPUT
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+    - name: Show ccache statistics
+      if: always()
+      run: |
+        echo "===== ccache statistics ====="
+        ccache --show-stats || true
+        echo "============================="
 
     - name: Check space usage
       if: (!cancelled())
