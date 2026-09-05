@@ -69,22 +69,22 @@ jobs:
       uses: actions/cache@v4
       with:
         path: |
-          /workdir/openwrt/dl
-          /workdir/openwrt/.ccache
-        key: openwrt-${{ runner.os }}-
+          openwrt/dl
+          openwrt/.ccache
+        key: openwrt-${{ runner.os }}-${{ github.run_id }}
         # ${{ hashFiles('.config', 'feeds.conf.default') }}
         restore-keys: |
           openwrt-${{ runner.os }}-
 
     - name: Setup ccache
       run: |
-        mkdir -p /workdir/openwrt/.ccache
+        mkdir -p openwrt/.ccache
         
-        ccache --set-config=cache_dir=/workdir/openwrt/.ccache
+        # ccache --set-config=cache_dir=openwrt/.ccache
         ccache --set-config=max_size=5G
         ccache --set-config=compression=true
         
-        echo "CCACHE_DIR=/workdir/openwrt/.ccache" >> $GITHUB_ENV
+        # echo "CCACHE_DIR=openwrt/.ccache" >> $GITHUB_ENV
         
         echo "===== ccache config ====="
         ccache --show-config
@@ -188,3 +188,11 @@ jobs:
         tag_name: ${{ steps.release_tag.outputs.tag }}
         files: ${{ env.FIRMWARE }}/*
 
+    - name: Save ccache
+      if: always()
+      uses: actions/cache/save@v4
+      with:
+        path: |
+          openwrt/.ccache
+          openwrt/dl
+        key: openwrt-${{ runner.os }}-${{ github.run_id }}
