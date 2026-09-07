@@ -79,12 +79,13 @@ jobs:
     - name: Setup ccache
       run: |
         mkdir -p openwrt/.ccache
+        du -sh openwrt/.ccache
         
-        # ccache --set-config=cache_dir=openwrt/.ccache
+        ccache --set-config=cache_dir=$GITHUB_WORKSPACE/openwrt/.ccache
         ccache --set-config=max_size=5G
         ccache --set-config=compression=true
         
-        # echo "CCACHE_DIR=openwrt/.ccache" >> $GITHUB_ENV
+        echo "CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache" >> $GITHUB_ENV
         
         echo "===== ccache config ====="
         ccache --show-config
@@ -131,6 +132,7 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
+        ccache -z
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "status=success" >> $GITHUB_OUTPUT
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
