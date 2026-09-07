@@ -18,3 +18,10 @@
 
 # Modify hostname
 #sed -i 's/OpenWrt/P3TERX-Router/g' package/base-files/files/bin/config_generate
+
+
+cat >> target/linux/mediatek/filogic/config-6.12 <<'EOF'
+CONFIG_PTP_1588_CLOCK=y
+# CONFIG_ZTS8032 is not set
+# CONFIG_ZTS8232 is not set
+EOF
