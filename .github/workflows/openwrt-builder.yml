@@ -193,6 +193,6 @@ jobs:
       uses: actions/cache/save@v4
       with:
         path: |
-          openwrt/.ccache
           openwrt/dl
+          openwrt/.ccache
         key: openwrt-${{ runner.os }}-${{ github.run_id }}
